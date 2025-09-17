@@ -154,9 +154,10 @@ Edite o `package.json`:
 
 ## 🚨 Solução de Problemas
 
-### Erro "Command n8n not found"
-- **Correção aplicada**: O Dockerfile foi atualizado para instalar n8n globalmente
-- **Solução**: Usamos `npm install -g n8n` no container base Node.js Alpine
+### Erro "command start not found"
+- **Problema resolvido**: Alterado para usar imagem oficial `n8nio/n8n:latest`
+- **Causa**: Instalação global do n8n em Alpine Linux tinha conflitos
+- **Solução**: Usar imagem oficial que já vem com n8n pré-configurado
 
 ### Erro de Conexão com Banco
 - Verifique se as credenciais do PostgreSQL estão corretas
@@ -176,8 +177,8 @@ Edite o `package.json`:
 - Ajuste `EXECUTIONS_DATA_MAX_AGE` para limpar dados antigos
 
 ### Problemas de Permissões
-- Definido `N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true` no container
-- Diretório `.n8n` é criado com permissões corretas (700)
+- A imagem oficial já vem com permissões configuradas corretamente
+- Diretório `.n8n` é criado automaticamente
 
 ## 📋 Checklist de Deploy
 
