@@ -1,5 +1,6 @@
 # Use Node.js como base e instale n8n de forma robusta
-FROM node:18-alpine
+# Use Node.js 20 Alpine (compatível com n8n 1.111.0)
+FROM node:20-alpine
 
 # Instalar dependências do sistema
 RUN apk add --no-cache \
