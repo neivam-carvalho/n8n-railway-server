@@ -10,9 +10,9 @@ RUN apk add --no-cache \
     curl \
     bash
 
-# Criar usuário n8n
-RUN addgroup -g 1000 n8n && \
-    adduser -u 1000 -G n8n -s /bin/bash -D n8n
+# Criar usuário n8n (usar grupo existente se GID 1000 já existir)
+RUN addgroup -g 1001 n8n 2>/dev/null || addgroup n8n && \
+    adduser -u 1001 -G n8n -s /bin/bash -D n8n
 
 # Definir diretório de trabalho
 WORKDIR /home/node
@@ -29,7 +29,7 @@ RUN echo '#!/bin/bash' > /usr/local/bin/start-n8n.sh && \
     echo 'echo "PATH: $PATH"' >> /usr/local/bin/start-n8n.sh && \
     echo 'echo "Usuário: $(whoami)"' >> /usr/local/bin/start-n8n.sh && \
     echo 'mkdir -p /home/node/.n8n' >> /usr/local/bin/start-n8n.sh && \
-    echo 'chown -R n8n:n8n /home/node/.n8n' >> /usr/local/bin/start-n8n.sh && \
+    echo 'chown -R 1001:1001 /home/node/.n8n' >> /usr/local/bin/start-n8n.sh && \
     echo 'exec n8n start' >> /usr/local/bin/start-n8n.sh && \
     chmod +x /usr/local/bin/start-n8n.sh
 
