@@ -154,6 +154,10 @@ Edite o `package.json`:
 
 ## 🚨 Solução de Problemas
 
+### Erro "Command n8n not found"
+- **Correção aplicada**: O Dockerfile foi atualizado para instalar n8n globalmente
+- **Solução**: Usamos `npm install -g n8n` no container base Node.js Alpine
+
 ### Erro de Conexão com Banco
 - Verifique se as credenciais do PostgreSQL estão corretas
 - Confirme se `DB_POSTGRESDB_SSL_ENABLED=true`
@@ -170,6 +174,10 @@ Edite o `package.json`:
 ### Performance Issues
 - Configure Redis e use `EXECUTIONS_MODE=queue`
 - Ajuste `EXECUTIONS_DATA_MAX_AGE` para limpar dados antigos
+
+### Problemas de Permissões
+- Definido `N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true` no container
+- Diretório `.n8n` é criado com permissões corretas (700)
 
 ## 📋 Checklist de Deploy
 
