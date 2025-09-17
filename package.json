@@ -1,14 +1,5 @@
 {
   "name": "n8n-railway-server",
   "version": "1.0.0",
-  "description": "n8n workflow automation server deployed on Railway",
-  "scripts": {
-    "start": "n8n start"
-  },
-  "keywords": ["n8n", "automation", "workflow", "railway"],
-  "author": "Neivam Carvalho",
-  "license": "MIT",
-  "engines": {
-    "node": ">=18.0.0"
-  }
+  "description": "n8n workflow automation server deployed on Railway"
 }
