@@ -9,7 +9,7 @@ COPY package*.json ./
 
 # Install dependencies
 USER root
-RUN npm ci --only=production && npm cache clean --force
+RUN npm install --only=production && npm cache clean --force
 
 # Switch back to node user for security
 USER node
