@@ -1,26 +1,48 @@
-# Use a imagem oficial do n8n
-FROM n8nio/n8n:latest
+# Use Node.js como base e instale n8n de forma robusta
+FROM node:18-alpine
 
-# Mude para usuário root temporariamente para configurações
-USER root
+# Instalar dependências do sistema
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    git \
+    curl \
+    bash
 
-# Instalar curl para health check
-RUN apk add --no-cache curl
+# Criar usuário n8n
+RUN addgroup -g 1000 n8n && \
+    adduser -u 1000 -G n8n -s /bin/bash -D n8n
 
 # Definir diretório de trabalho
 WORKDIR /home/node
+RUN chown n8n:n8n /home/node
 
-# Copiar arquivos de configuração
-COPY package*.json ./
+# Instalar n8n globalmente
+RUN npm install -g n8n@latest
 
-# Voltar para o usuário node
-USER node
+# Criar script de inicialização
+RUN echo '#!/bin/bash' > /usr/local/bin/start-n8n.sh && \
+    echo 'set -e' >> /usr/local/bin/start-n8n.sh && \
+    echo 'echo "🚀 Iniciando n8n..."' >> /usr/local/bin/start-n8n.sh && \
+    echo 'echo "Versão n8n: $(n8n --version)"' >> /usr/local/bin/start-n8n.sh && \
+    echo 'echo "PATH: $PATH"' >> /usr/local/bin/start-n8n.sh && \
+    echo 'echo "Usuário: $(whoami)"' >> /usr/local/bin/start-n8n.sh && \
+    echo 'mkdir -p /home/node/.n8n' >> /usr/local/bin/start-n8n.sh && \
+    echo 'chown -R n8n:n8n /home/node/.n8n' >> /usr/local/bin/start-n8n.sh && \
+    echo 'exec n8n start' >> /usr/local/bin/start-n8n.sh && \
+    chmod +x /usr/local/bin/start-n8n.sh
+
+# Mudar para usuário n8n
+USER n8n
 
 # Configurar variáveis de ambiente
 ENV N8N_HOST=0.0.0.0
 ENV N8N_PORT=5678
 ENV N8N_PROTOCOL=https
 ENV NODE_ENV=production
+ENV N8N_USER_FOLDER=/home/node/.n8n
+ENV PATH="/usr/local/bin:$PATH"
 
 # Expor porta
 EXPOSE 5678
@@ -29,5 +51,5 @@ EXPOSE 5678
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
   CMD curl -f http://localhost:5678/healthz || exit 1
 
-# Iniciar n8n
-CMD ["n8n", "start"]
+# Usar ENTRYPOINT para garantir execução
+ENTRYPOINT ["/usr/local/bin/start-n8n.sh"]
