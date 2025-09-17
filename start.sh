@@ -1,30 +1,35 @@
 #!/bin/bash
+set -e
 
-# Startup script for n8n on Railway
-# This script can be used for custom initialization if needed
+echo "🚀 Iniciando n8n server na Railway..."
 
-echo "🚀 Starting n8n server on Railway..."
+# Verificar se n8n está instalado
+if ! command -v n8n &> /dev/null; then
+    echo "❌ ERRO: n8n não encontrado, instalando..."
+    npm install -g n8n@latest
+fi
 
-# Check if required environment variables are set
+# Verificar versão
+echo "📋 Versão n8n: $(n8n --version)"
+
+# Verificar variáveis obrigatórias
 if [ -z "$N8N_ENCRYPTION_KEY" ]; then
-    echo "❌ ERROR: N8N_ENCRYPTION_KEY is not set!"
+    echo "❌ ERRO: N8N_ENCRYPTION_KEY não configurada!"
     exit 1
 fi
 
-if [ -z "$DB_POSTGRESDB_HOST" ]; then
-    echo "❌ ERROR: Database configuration is missing!"
-    exit 1
-fi
+# Configurar diretório n8n
+export N8N_USER_FOLDER=${N8N_USER_FOLDER:-/app/.n8n}
+mkdir -p "$N8N_USER_FOLDER"
 
-# Print some basic info (without sensitive data)
-echo "📊 n8n Configuration:"
-echo "   - Host: $N8N_HOST"
-echo "   - Port: $N8N_PORT"
-echo "   - Protocol: $N8N_PROTOCOL"
-echo "   - Database Type: $DB_TYPE"
-echo "   - Environment: $NODE_ENV"
-echo "   - Timezone: $GENERIC_TIMEZONE"
+# Log configurações (sem dados sensíveis)
+echo "📊 Configurações:"
+echo "   - Host: ${N8N_HOST:-0.0.0.0}"
+echo "   - Port: ${N8N_PORT:-5678}"
+echo "   - Protocol: ${N8N_PROTOCOL:-http}"
+echo "   - Environment: ${NODE_ENV:-development}"
+echo "   - User Folder: $N8N_USER_FOLDER"
 
-# Start n8n
-echo "🎯 Launching n8n..."
+# Iniciar n8n
+echo "🎯 Iniciando n8n..."
 exec n8n start
