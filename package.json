@@ -7,7 +7,7 @@
     "start": "n8n start",
     "dev": "n8n start --tunnel",
     "build": "echo 'No build needed'",
-    "postinstall": "n8n --version"
+    "postinstall": "echo 'n8n installed globally'"
   },
   "keywords": [
     "n8n",
@@ -17,9 +17,7 @@
   ],
   "author": "Neivam Carvalho",
   "license": "MIT",
-  "dependencies": {
-    "n8n": "^1.60.1"
-  },
+  "dependencies": {},
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=8.0.0"
