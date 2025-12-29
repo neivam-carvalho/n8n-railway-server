@@ -1,5 +1,11 @@
 {
   "name": "n8n-railway-server",
   "version": "1.0.0",
-  "description": "n8n workflow automation server deployed on Railway"
+  "description": "n8n workflow automation server deployed on Railway",
+  "dependencies": {
+    "n8n": "1.120.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
 }
